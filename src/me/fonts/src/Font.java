@@ -237,6 +237,37 @@ public final class Font {
 		return new FontOutput(FontFamily.valueOf(name), size, bounds);
 	}
 	
+	/**
+	 * Measure the width of a font with certain text.
+	 * @param font The font to measure with.
+	 * @param text The text the measure the width of.
+	 * @return The width of the text with the provided font.
+	 */
+	public static int measureText(Font font, String text) {
+		return measureText(font, text, font.getSize() / 16 + 1);
+	}
+	
+	/**
+	 * Measure the width of a font with certain text.
+	 * @param font The font to measure with.
+	 * @param text The text the measure the width of.
+	 * @param spacing The spacing between each character.
+	 * @return The width of the text with the provided font.
+	 */
+	public static int measureText(Font font, String text, double spacing) {
+		int output = 0;
+		
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			int index = CHARACTERS.indexOf(c);
+			SpriteBase sprite = font.SPRITES[index];
+			
+			output += sprite.getWidth() + spacing;
+		}
+		
+		return output;
+	}
+	
 	private final SpriteBase[] createSpriteXLimitations(int color, SpriteBase[] sprites) {
 		SpriteBase[] output = new SpriteBase[sprites.length];
 		int current = 0;
