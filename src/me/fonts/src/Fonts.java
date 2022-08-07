@@ -50,6 +50,19 @@ public final class Fonts {
 	}
 	
 	/**
+	 * Gets the very first font in the FONTS array.
+	 */
+	public static final Font firstFont = getFont(0);
+	/**
+	 * Gets the very last font in the FONTS array.
+	 */
+	public static final Font lastFont = getFont(FONTS.length - 1);
+	/**
+	 * Retrieves the default font: <code>ARIAL 14PT</code> font.
+	 */
+	public static final Font defaultFont = getFont(FontFamily.ARIAL, 14);
+	
+	/**
 	 * Get the font by the font family and the font size.
 	 * @param family The font family of the font to print.
 	 * @param size The size of the font to print.

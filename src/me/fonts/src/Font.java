@@ -238,6 +238,24 @@ public final class Font {
 	}
 	
 	/**
+	 * Measure the width of the current font with certain text.
+	 * @param text The text the measure the width of.
+	 * @return The width of the text with the provided font.
+	 */
+	public int measureText(String text) {
+		return measureText(this, text);
+	}
+	
+	/**
+	 * Measure the width of the current font with certain text.
+	 * @param text The text the measure the width of.
+	 * @return The width of the text with the provided font.
+	 */
+	public int measureText(String text, double spacing) {
+		return measureText(this, text, spacing);
+	}
+	
+	/**
 	 * Measure the width of a font with certain text.
 	 * @param font The font to measure with.
 	 * @param text The text the measure the width of.
@@ -260,12 +278,118 @@ public final class Font {
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
 			int index = CHARACTERS.indexOf(c);
+			
+			if (index == -1 && c != '\n' && c != '\r' && c != '\t' && c != '\b') {
+				output += font.getSize() / 2 + font.getSize() / 5;
+				continue;
+			} else if (c == '\n') {
+				output = 0;
+				continue;
+			} else if (c == '\r') {
+				output += (font.getSize() / 2 + font.getSize() / 5) >> 1;
+				continue;
+			} else if (c == '\t') {
+				output += (font.getSize() / 2 + font.getSize() / 5) << 1;
+				continue;
+			} else if (c == '\b')
+				continue;
+			
 			SpriteBase sprite = font.SPRITES[index];
 			
 			output += sprite.getWidth() + spacing;
 		}
 		
 		return output;
+	}
+	
+	/**
+	 * Gets the index of the character located at the provided x position provided.<br>
+	 * Easy examples for usages would be:<br>
+	 * Creating a custom TextField, clicking in the textfield would get an x position relative to the screen.<br>
+	 * Subtracting the textfield's location from the x position clicked would provide a good x position to retrieve where in the string you clicked.
+	 * @param text The text to measure.
+	 * @param trueX The location in the string to search the index of.
+	 * @return The index of the character found at the trueX provided.
+	 */
+	public int xIndexOf(String text, int trueX) {
+		return xIndexOf(this, text, trueX);
+	}
+	
+	/**
+	 * Gets the index of the character located at the provided x position provided.<br>
+	 * Easy examples for usages would be:<br>
+	 * Creating a custom TextField, clicking in the textfield would get an x position relative to the screen.<br>
+	 * Subtracting the textfield's location from the x position clicked would provide a good x position to retrieve where in the string you clicked.
+	 * @param text The text to measure.
+	 * @param spacing The spacing between each letter.
+	 * @param trueX The location in the string to search the index of.
+	 * @return The index of the character found at the trueX provided.
+	 */
+	public int xIndexOf(String text, double spacing, int trueX) {
+		return xIndexOf(this, text, spacing, trueX);
+	}
+	
+	/**
+	 * Gets the index of the character located at the provided x position provided.<br>
+	 * Easy examples for usages would be:<br>
+	 * Creating a custom TextField, clicking in the textfield would get an x position relative to the screen.<br>
+	 * Subtracting the textfield's location from the x position clicked would provide a good x position to retrieve where in the string you clicked.
+	 * @param font The font to measure and gather the character location.
+	 * @param text The text to measure.
+	 * @param trueX The location in the string to search the index of.
+	 * @return The index of the character found at the trueX provided.
+	 */
+	public static int xIndexOf(Font font, String text, int trueX) {
+		return xIndexOf(font, text, font.getSize() / 16 + 1, trueX);
+	}
+	
+	/**
+	 * Gets the index of the character located at the provided x position provided.<br>
+	 * Easy examples for usages would be:<br>
+	 * Creating a custom TextField, clicking in the textfield would get an x position relative to the screen.<br>
+	 * Subtracting the textfield's location from the x position clicked would provide a good x position to retrieve where in the string you clicked.
+	 * @param font The font to measure and gather the character location.
+	 * @param text The text to measure.
+	 * @param spacing The spacing between each letter.
+	 * @param trueX The location in the string to search the index of.
+	 * @return The index of the character found at the trueX provided.
+	 */
+	public static int xIndexOf(Font font, String text, double spacing, int trueX) {
+		if (trueX <= 0 || text == null || text.length() == 0)
+			return 0;
+		
+		int output = 0;
+		int width = 0;
+		
+		for (int i = 0; i < text.length(); i++, output++) {
+			char c = text.charAt(i);
+			int index = CHARACTERS.indexOf(c);
+			double current = 0;
+			
+			if (index == -1 && c != '\n' && c != '\r' && c != '\t' && c != '\b') {
+				current = font.getSize() / 2 + font.getSize() / 5;
+				width += current;
+			} else if (c == '\n') {
+				width = 0;
+				continue;
+			} else if (c == '\r') {
+				current = (font.getSize() / 2 + font.getSize() / 5) >> 1;
+				width += current;
+			} else if (c == '\t') {
+				current = (font.getSize() / 2 + font.getSize() / 5) << 1;
+				width += current;
+			} else if (c == '\b')
+				continue;
+			else {
+				current = font.SPRITES[index].getWidth() + spacing;
+				width += current;
+			}
+			
+			if (width - current / 2 + font.getSize() / 4 >= trueX)
+				return output;
+		}
+		
+		return text.length() - 1;
 	}
 	
 	private final SpriteBase[] createSpriteXLimitations(int color, SpriteBase[] sprites) {
@@ -342,18 +466,20 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 4;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
 				case ':':
 				case ',':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
-				case '@':
 				case '$':
 				case '(':
 				case ')':
@@ -381,17 +507,21 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 4;
+					break;
+				case '@':
+					output[i] = 3;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
 				case 'q':
 				case 'y':
 				case ',':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
-				case '@':
 				case '$':
 				case '(':
 				case ')':
@@ -420,21 +550,23 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 4;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
 					output[i] = 3;
 					break;
 				case ':':
 				case ';':
 				case ',':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
-				case '@':
 				case '$':
 				case '(':
 				case ')':
@@ -466,14 +598,14 @@ public final class Font {
 				case 'p':
 				case 'q':
 				case 'y':
-					output[i] = 3;
-					break;
-				case ',':
 				case '\'':
 				case '"':
-					output[i] = 2;
+					output[i] = 3;
 					break;
 				case '@':
+				case ',':
+					output[i] = 2;
+					break;
 				case '(':
 				case ')':
 				case '{':
@@ -505,16 +637,16 @@ public final class Font {
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
+				case '\'':
+				case '"':
 					output[i] = 3;
 					break;
 				case 'j':
 				case ',':
-				case '\'':
-				case '"':
 				case '*':
 					output[i] = 2;
 					break;
-				case '@':
 				case '(':
 				case ')':
 				case '{':
@@ -552,15 +684,15 @@ public final class Font {
 					output[i] = 4;
 					break;
 				case 'j':
+				case '@':
+				case '\'':
+				case '"':
 				case ',':
 					output[i] = 3;
 					break;
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
-				case '@':
 				case '$':
 				case '*':
 				case '(':
@@ -595,22 +727,24 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 6;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
 					output[i] = 4;
 					break;
 				case ',':
 					output[i] = 3;
 					break;
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
-				case '@':
 				case '$':
 				case '*':
 				case '(':
@@ -644,18 +778,20 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 6;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
 					output[i] = 5;
 					break;
 				case ',':
 					output[i] = 4;
-					break;
-				case '@':
-					output[i] = 3;
 					break;
 				case '(':
 				case ')':
@@ -665,8 +801,6 @@ public final class Font {
 				case ']':
 				case ':':
 				case ';':
-				case '\'':
-				case '"':
 					output[i] = 2;
 					break;
 				case '$':
@@ -694,6 +828,13 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 7;
+					break;
+				case '@':
+					output[i] = 6;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
@@ -701,13 +842,10 @@ public final class Font {
 				case 'y':
 					output[i] = 5;
 					break;
-				case '@':
 				case ',':
 					output[i] = 4;
 					break;
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 3;
 					break;
 				case '(':
@@ -751,17 +889,19 @@ public final class Font {
 				case 'p':
 				case 'q':
 				case 'y':
+				case '\'':
+				case '"':
 					output[i] = 6;
+					break;
+				case '@':
+					output[i] = 5;
 					break;
 				case ',':
 					output[i] = 4;
 					break;
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 3;
 					break;
-				case '@':
 				case '$':
 				case '(':
 				case ')':
@@ -800,6 +940,13 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 10;
+					break;
+				case '@':
+					output[i] = 7;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
@@ -810,10 +957,7 @@ public final class Font {
 				case ',':
 					output[i] = 4;
 					break;
-				case '@':
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 3;
 					break;
 				case '$':
@@ -854,6 +998,10 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 8;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
@@ -861,16 +1009,14 @@ public final class Font {
 				case 'y':
 					output[i] = 7;
 					break;
+				case '@':
+					output[i] = 6;
+					break;
 				case ',':
 					output[i] = 5;
 					break;
 				case ':':
-				case '\'':
-				case '"':
 					output[i] = 4;
-					break;
-				case '@':
-					output[i] = 3;
 					break;
 				case '$':
 				case '(':
@@ -914,9 +1060,12 @@ public final class Font {
 				case 'p':
 				case 'q':
 				case 'y':
+				case '@':
 					output[i] = 7;
 					break;
 				case 'j':
+				case '\'':
+				case '"':
 					output[i] = 6;
 					break;
 				case ',':
@@ -924,11 +1073,8 @@ public final class Font {
 					break;
 				case '*':
 				case ';':
-				case '\'':
-				case '"':
 					output[i] = 4;
 					break;
-				case '@':
 				case '(':
 				case ')':
 				case '{':
@@ -976,6 +1122,9 @@ public final class Font {
 					output[i] = 9;
 					break;
 				case 'j':
+				case '@':
+				case '\'':
+				case '"':
 					output[i] = 8;
 					break;
 				case ',':
@@ -983,11 +1132,8 @@ public final class Font {
 					break;
 				case '*':
 				case ';':
-				case '\'':
-				case '"':
 					output[i] = 4;
 					break;
-				case '@':
 				case '$':
 				case '(':
 				case ')':
@@ -1031,7 +1177,12 @@ public final class Font {
 				case 'p':
 				case 'q':
 				case 'y':
+				case '\'':
+				case '"':
 					output[i] = 10;
+					break;
+				case '@':
+					output[i] = 9;
 					break;
 				case ',':
 					output[i] = 7;
@@ -1043,11 +1194,8 @@ public final class Font {
 				case '[':
 				case ']':
 				case ';':
-				case '\'':
-				case '"':
 					output[i] = 4;
 					break;
-				case '@':
 				case '$':
 				case ':':
 				case '_':
@@ -1091,6 +1239,10 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 13;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
@@ -1098,12 +1250,11 @@ public final class Font {
 				case 'y':
 					output[i] = 11;
 					break;
+				case '@':
+					output[i] = 10;
+					break;
 				case ',':
 					output[i] = 8;
-					break;
-				case '\'':
-				case '"':
-					output[i] = 6;
 					break;
 				case '(':
 				case ')':
@@ -1114,7 +1265,6 @@ public final class Font {
 				case ';':
 					output[i] = 4;
 					break;
-				case '@':
 				case '$':
 				case ':':
 				case '_':
@@ -1158,6 +1308,10 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 15;
+					break;
 				case 'g':
 				case 'j':
 				case 'p':
@@ -1165,12 +1319,11 @@ public final class Font {
 				case 'y':
 					output[i] = 14;
 					break;
+				case '@':
+					output[i] = 12;
+					break;
 				case ',':
 					output[i] = 9;
-					break;
-				case '\'':
-				case '"':
-					output[i] = 7;
 					break;
 				case '(':
 				case ')':
@@ -1187,7 +1340,6 @@ public final class Font {
 					output[i] = 4;
 					break;
 				case 'Q':
-				case '@':
 				case '*':
 				case '|':
 					output[i] = 3;
@@ -1225,6 +1377,10 @@ public final class Font {
 		
 		for (int i = 0; i < CHARACTERS.length(); i++) {
 			switch (CHARACTERS.charAt(i)) {
+				case '\'':
+				case '"':
+					output[i] = 21;
+					break;
 				case 'g':
 				case 'j':
 				case 'y':
@@ -1234,12 +1390,11 @@ public final class Font {
 				case 'q':
 					output[i] = 19;
 					break;
+				case '@':
+					output[i] = 18;
+					break;
 				case ',':
 					output[i] = 15;
-					break;
-				case '\'':
-				case '"':
-					output[i] = 10;
 					break;
 				case '*':
 				case '(':
@@ -1256,7 +1411,6 @@ public final class Font {
 				case '_':
 					output[i] = 6;
 					break;
-				case '@':
 				case '|':
 					output[i] = 5;
 					break;
