@@ -238,6 +238,184 @@ public final class Font {
 	}
 	
 	/**
+	 * Render to the set screen the format provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * @param format The format to form the text and colors.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(FontFormat format, int x, int y, Rectangle bounds) {
+		return renderWithLimits(format.getText(), x, y, 0, size / 16 + 1, (int) (size / 2.5), bounds, format.getColors());
+	}
+	
+	/**
+	 * Render to the set screen the text provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * <br>In order to create a new line, use <code>\n</code>.
+	 * <br>In order to create a tabbed space, use <code>\t</code>.
+	 * <br>In order to create a short space (half the size of a normal NBSP), use <code>\r</code>.
+	 * <br>To change the color mid-way, use <code>\b</code> and it will use the next color in your colors array.
+	 * @param text The text to render to the screen.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @param colors The ordered list of colors to iterate through when using <code>\b</code>.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(String text, int x, int y, Rectangle bounds, int...colors) {
+		return renderWithLimits(text, x, y, 0, size / 16 + 1, (int) (size / 2.5), bounds, colors);
+	}
+	
+	/**
+	 * Render to the set screen the format provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * @param format The format to form the text and colors.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(FontFormat format, int x, int y, int color, Rectangle bounds) {
+		return renderWithLimits(format.getText(), x, y, color, size / 16 + 1, (int) (size / 2.5), bounds, format.getColors());
+	}
+	
+	/**
+	 * Render to the set screen the text provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * <br>In order to create a new line, use <code>\n</code>.
+	 * <br>In order to create a tabbed space, use <code>\t</code>.
+	 * <br>In order to create a short space (half the size of a normal NBSP), use <code>\r</code>.
+	 * <br>To change the color mid-way, use <code>\b</code> and it will use the next color in your colors array.
+	 * @param text The text to render to the screen.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @param colors The ordered list of colors to iterate through when using <code>\b</code>.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(String text, int x, int y, int color, Rectangle bounds, int...colors) {
+		return renderWithLimits(text, x, y, color, size / 16 + 1, (int) (size / 2.5), bounds, colors);
+	}
+	
+	/**
+	 * Render to the set screen the format provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * @param format The format to form the text and colors.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param spacing The spacing between each letter (default is 1).
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(FontFormat format, int x, int y, int color, double spacing, Rectangle bounds) {
+		return renderWithLimits(format.getText(), x, y, color, spacing, (int) (size / 2.5), bounds, format.getColors());
+	}
+	
+	/**
+	 * Render to the set screen the text provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * <br>In order to create a new line, use <code>\n</code>.
+	 * <br>In order to create a tabbed space, use <code>\t</code>.
+	 * <br>In order to create a short space (half the size of a normal NBSP), use <code>\r</code>.
+	 * <br>To change the color mid-way, use <code>\b</code> and it will use the next color in your colors array.
+	 * @param text The text to render to the screen.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param spacing The spacing between each letter (default is 1).
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @param colors The ordered list of colors to iterate through when using <code>\b</code>.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(String text, int x, int y, int color, double spacing, Rectangle bounds, int...colors) {
+		return renderWithLimits(text, x, y, color, spacing, (int) (size / 2.5), bounds, colors);
+	}
+	
+	/**
+	 * Render to the set screen the format provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * @param format The format to form the text and colors.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param spacing The spacing between each letter (default is 1).
+	 * @param lineHeight The height between lines when using <code>\n</code> (default is 1).
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(FontFormat format, int x, int y, int color, double spacing, double lineHeight, Rectangle bounds) {
+		return renderWithLimits(format.getText(), x, y, color, spacing, lineHeight, bounds, format.getColors());
+	}
+	
+	/**
+	 * Render to the set screen the text provided, located at the x and y provided, with the hex color provided, and the spacing and lineHeight provided.
+	 * <br>In order to create a new line, use <code>\n</code>.
+	 * <br>In order to create a tabbed space, use <code>\t</code>.
+	 * <br>In order to create a short space (half the size of a normal NBSP), use <code>\r</code>.
+	 * <br>To change the color mid-way, use <code>\b</code> and it will use the next color in your colors array.
+	 * @param text The text to render to the screen.
+	 * @param x The x position to render on the screen.
+	 * @param y The y position to render on the screen.
+	 * @param color The color of the text.
+	 * @param spacing The spacing between each letter (default is 1).
+	 * @param lineHeight The height between lines when using <code>\n</code> (default is 1).
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @param colors The ordered list of colors to iterate through when using <code>\b</code>.
+	 * @return A FontOutput to find the locations of the text, the font family, and the font size.
+	 */
+	public final FontOutput renderWithLimits(String text, int x, int y, int color, double spacing, double lineHeight, Rectangle bounds, int...colors) {
+		double xOffset = 0;
+		double line = 0;
+		int width = 0;
+		int height = 0;
+		int currentColor = 0;
+		
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			
+			int index = CHARACTERS.indexOf(c);
+			
+			if (index == -1 && c != '\n' && c != '\r' && c != '\t' && c != '\b') {
+				xOffset += size / 2 + size / 5;
+				continue;
+			} else if (c == '\n') {
+				xOffset = 0;
+				line++;
+				continue;
+			} else if (c == '\r') {
+				xOffset += (size / 2 + size / 5) >> 1;
+				continue;
+			} else if (c == '\t') {
+				xOffset += (size / 2 + size / 5) << 1;
+				continue;
+			} else if (c == '\b') {
+				color = colors[currentColor++];
+				continue;
+			}
+			
+			SpriteBase sprite = new SpriteBase(SPRITES[index]) {};
+			
+			if (color != 0xFF000000)
+				sprite.replaceColor(0xFF000000, color);
+			
+			int yOffset = yOffsets[index];
+			
+			if (screen == null) {
+				System.err.println("Screen is not set in this font.  Please use .setScreen() to set it.");
+				break;
+			} else
+				screen.render(sprite, x + (int) xOffset, y + yOffset + (int) (line * (size + lineHeight)), bounds, 0xFFFF00FF);
+			
+			xOffset += sprite.getWidth() + spacing;
+			
+			if (xOffset > width)
+				width = (int) xOffset;
+		}
+		
+		height = (int) ((line + 1) * (size + lineHeight));
+				
+		return new FontOutput(FontFamily.valueOf(name), size, new Rectangle(x, y, width, height));
+	}
+	
+	/**
 	 * Measure the width of the current font with certain text.
 	 * @param text The text the measure the width of.
 	 * @return The width of the text with the provided font.
@@ -389,7 +567,7 @@ public final class Font {
 				return output;
 		}
 		
-		return text.length() - 1;
+		return text.length();
 	}
 	
 	private final SpriteBase[] createSpriteXLimitations(int color, SpriteBase[] sprites) {

@@ -1,5 +1,7 @@
 package me.fonts.graphics;
 
+import java.awt.Rectangle;
+
 /**
  * An interface for a rasterization screen.  The class that extends this will need to properly implement the SpriteBase into their pixels array; otherwise, the fonts will not appear properly.
  * @author Joshua Diemer
@@ -19,4 +21,13 @@ public interface IScreen {
 	 * @param opaqueColors Which colors, if any, to avoid rendering (usually 0xFFFF00FF).
 	 */
 	void render(SpriteBase sprite, int x, int y, int...opaqueColors);
+	/**
+	 * An abstract method to render a SpriteBase to the pixels array that you have set up.
+	 * @param sprite The sprite to render to the pixels array.
+	 * @param x The x position on the pixels array to render to.
+	 * @param y The y position on the pixels array to render to.
+	 * @param bounds The x, y, width, and height limitations on the screen to render the text to.
+	 * @param opaqueColors Which colors, if any, to avoid rendering (usually 0xFFFF00FF).
+	 */
+	void render(SpriteBase sprite, int x, int y, Rectangle bounds, int...opaqueColors);
 }
